@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ui="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
+             x:Class="Herpes.Page.MainPage"
+             ui:MaterialNavigationPage.AppBarColor="#2c3e50"
+             ui:MaterialNavigationPage.AppBarTitleTextFontFamily="Roboto"
+             ui:MaterialNavigationPage.AppBarTitleTextFontSize="14"
+             ui:MaterialNavigationPage.StatusBarColor="#1B3147"
+             ui:MaterialNavigationPage.AppBarTitleTextAlignment="Start"
+             BindingContext="{Binding Source={StaticResource Locator}, 
+                                        Path=MainViewModel,
+                                        Mode=OneWay}">
+    <NavigationPage.TitleView>
+        <Label Text="Herpes" />
+    </NavigationPage.TitleView>
+    <ContentPage.Content>
+        <StackLayout>
+            <Label
+                Text="Hello, world!"
+                VerticalOptions="CenterAndExpand"
+                HorizontalOptions="CenterAndExpand" />
+            <ListView
+                VerticalOptions="CenterAndExpand"
+                HorizontalOptions="CenterAndExpand"
+                Margin="5"
+                ItemsSource="{Binding Players}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ui:MaterialCard
+                                Padding="2"
+                                CornerRadius="2"
+                                Elevation="1"
+                                HeightRequest="80"
+                                HorizontalOptions="FillAndExpand"
+                                BackgroundColor="DarkGray">
+                                
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label
+                                        Grid.Column="0"
+                                        Text="{Binding Id}"
+                                        FontAttributes="Bold" />
+                                    <Label
+                                        Grid.Column="1"
+                                        Text="{Binding Name}"
+                                        FontAttributes="None" />
+                                </Grid>
+                                
+                            </ui:MaterialCard>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <!-- <CollectionView -->
+            <!--     VerticalOptions="CenterAndExpand" -->
+            <!--     HorizontalOptions="CenterAndExpand" -->
+            <!--     Margin="5" -->
+            <!--     ItemsSource="{Binding Players}"> -->
+            <!--     <CollectionView.ItemTemplate> -->
+            <!--         <DataTemplate> -->
+            <!--             <Grid Padding="10"> -->
+            <!--                 <Grid.RowDefinitions> -->
+            <!--                     <RowDefinition Height="Auto" /> -->
+            <!--                 </Grid.RowDefinitions> -->
+            <!--                 <Grid.ColumnDefinitions> -->
+            <!--                     <ColumnDefinition Width="Auto" /> -->
+            <!--                     <ColumnDefinition Width="Auto" /> -->
+            <!--                 </Grid.ColumnDefinitions> -->
+            <!--                 <Label -->
+            <!--                     Grid.Column="0" -->
+            <!--                     Text="{Binding Id}" -->
+            <!--                     FontAttributes="Bold" /> -->
+            <!--                 <Label -->
+            <!--                     Grid.Column="1" -->
+            <!--                     Text="{Binding Name}" -->
+            <!--                     FontAttributes="None" /> -->
+            <!--             </Grid> -->
+            <!--         </DataTemplate> -->
+            <!--     </CollectionView.ItemTemplate> -->
+            <!-- </CollectionView> -->
+
+            <Entry
+                Placeholder="Add a new Player"
+                Text="{Binding NewPlayerName, Mode=TwoWay}" />
+            <Button
+                Text="Add Player"
+                Command="{Binding AddPlayerCommand}" />
+            <Button
+                Text="To Details"
+                Command="{Binding NavigateCommand}" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
