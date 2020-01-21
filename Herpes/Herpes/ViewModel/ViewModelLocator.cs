@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Ioc;
+using Herpes.Infrastructure.Service;
 
 namespace Herpes.ViewModel
 {
@@ -8,8 +9,16 @@ namespace Herpes.ViewModel
         {
             SimpleIoc.Default.Reset();
 
+            SimpleIoc.Default.Register<INavigationService, NavigationService>();
+
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<DetailsViewModel>();
+            SimpleIoc.Default.Register<GameViewModel>();
+        }
+
+        public INavigationService NavigationService
+        {
+            get { return SimpleIoc.Default.GetInstance<INavigationService>(); }
         }
 
         public MainViewModel MainViewModel
@@ -20,6 +29,11 @@ namespace Herpes.ViewModel
         public DetailsViewModel DetailsViewModel
         {
             get { return SimpleIoc.Default.GetInstance<DetailsViewModel>(); }
+        }
+
+        public GameViewModel GameViewModel
+        {
+            get { return SimpleIoc.Default.GetInstance<GameViewModel>(); }
         }
     }
 }

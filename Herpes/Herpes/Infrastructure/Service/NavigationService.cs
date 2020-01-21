@@ -9,13 +9,33 @@ namespace Herpes.Infrastructure.Service
 {
     public class NavigationService : INavigationService
     {
-        // Dictionary with registered pages in the app:
-        private readonly Dictionary<AppPages, Type> _pagesByKey = new Dictionary<AppPages, Type>();
+        // Dictionary with registered pages in the app
+        private readonly Dictionary<AppPage, Type> _pagesByKey = new Dictionary<AppPage, Type>();
 
-        // Navigation page where MainPage is hosted:
+        // Navigation page where MainPage is hosted
         private NavigationPage _navigation;
 
-        // Get currently displayed page:
+        /// <summary>
+        ///    Navigate to page by string with parameters  
+        /// </summary>
+        /// <param name="pageKey">page</param>
+        /// <param name="parameter">object of parameter(s)</param>
+        public void NavigateTo(string pageKey, object parameter)
+        {
+            try
+            {
+                System.Enum.TryParse(pageKey, out AppPage appPage);
+                NavigateTo(appPage, parameter);
+            }
+            catch (ArgumentException e)
+            {
+                Console.WriteLine($@"Can't navigate. ""{pageKey}"" not in AppPages.");
+            }
+        }
+
+        /// <summary>
+        ///     Gets the current Page
+        /// </summary>
         public string CurrentPageKey
         {
             get
@@ -33,20 +53,33 @@ namespace Herpes.Infrastructure.Service
             }
         }
 
-        // GoBack implementation (just pop page from the navigation stack):
+        /// <summary>
+        /// Pop page from navigationstack
+        /// </summary>
         public void GoBack()
         {
             _navigation.PopAsync();
         }
 
-        // NavigateTo method to navigate between pages without passing parameter:
-        public void NavigateTo(AppPages pageKey)
+        /// <summary>
+        ///     Navigate to page by string without parameter
+        /// </summary>
+        /// <param name="pageKey">Page</param>
+        public void NavigateTo(string pageKey)
         {
-            NavigateTo(pageKey, null);
+            try
+            {
+                System.Enum.TryParse(pageKey, out AppPage appPage);
+                NavigateTo(appPage, null);
+            }
+            catch (ArgumentException e)
+            {
+                Console.WriteLine($@"Can't navigate. ""{pageKey}"" not in AppPages.");
+            }
         }
 
         // NavigateTo method to navigate between pages with passing parameter:
-        public void NavigateTo(AppPages pageKey, object parameter)
+        public void NavigateTo(AppPage pageKey, object parameter)
         {
             lock (_pagesByKey)
             {
@@ -94,15 +127,18 @@ namespace Herpes.Infrastructure.Service
                 else
                 {
                     throw new ArgumentException(
-                        string.Format(
-                            "No such page: {0}. Did you forget to call NavigationService.Configure?",
-                            pageKey), nameof(pageKey));
+                        $"No such page: {pageKey}. Did you forget to call NavigationService.Configure?",
+                        nameof(pageKey));
                 }
             }
         }
 
-        // Register pages and add them to the dictionary:
-        public void Configure(AppPages pageKey, Type pageType)
+        /// <summary>
+        ///     Register a page and add to the dict
+        /// </summary>
+        /// <param name="pageKey">Page</param>
+        /// <param name="pageType">Type of page</param>
+        public void Configure(AppPage pageKey, Type pageType)
         {
             lock (_pagesByKey)
             {
@@ -113,7 +149,22 @@ namespace Herpes.Infrastructure.Service
             }
         }
 
-        // Initialize first app page (navigation page):
+        /// <summary>
+        /// Register multiple pages and add them to the dict
+        /// </summary>
+        /// <param name="appPages"></param>
+        public void Configure(IEnumerable<(AppPage pageKey, Type pageType)> appPages)
+        {
+            foreach (var (pageKey, pageType) in appPages)
+            {
+                Configure(pageKey, pageType);
+            }
+        }
+
+        /// <summary>
+        /// Initialize the first app page
+        /// </summary>
+        /// <param name="navigation"></param>
         public void Initialize(NavigationPage navigation)
         {
             _navigation = navigation;

@@ -18,14 +18,21 @@ namespace Herpes.ViewModel
 
         #region Commands
 
-        private RelayCommand _navigateCommand;
+        private RelayCommand _navigateToDetailsCommand;
 
         /// <summary>
         ///     Gets the command to navigate.
         /// </summary>
-        public RelayCommand NavigateCommand
+        public RelayCommand NavigateToDetailsCommand
         {
-            get { return _navigateCommand ?? (_navigateCommand = new RelayCommand(Navigate)); }
+            get { return _navigateToDetailsCommand ?? (_navigateToDetailsCommand = new RelayCommand(NavigateToDetails)); }
+        }
+
+        private RelayCommand _navigateToGameCommand;
+
+        public RelayCommand NavigateToGameCommand
+        {
+            get { return _navigateToGameCommand ?? (_navigateToGameCommand = new RelayCommand(NavigateToGame)); }
         }
 
         private RelayCommand _addPlayerCommand;
@@ -34,7 +41,7 @@ namespace Herpes.ViewModel
         {
             get { return _addPlayerCommand ?? (_addPlayerCommand = new RelayCommand(AddPlayer)); }
         }
-        
+
         #endregion
 
         #region Properties
@@ -60,21 +67,30 @@ namespace Herpes.ViewModel
             get => _newPlayerName;
             set => Set(nameof(NewPlayerName), ref _newPlayerName, value);
         }
-        
+
         #endregion
-        
+
+        #region Ctor
+
         public MainViewModel(INavigationService navigationService)
         {
-            _navigationService = navigationService;
+            _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
             //TODO: change following to loaded event
             Players = new ObservableCollection<Player>();
         }
 
+        #endregion
+
         #region Methods
 
-        private void Navigate()
+        private void NavigateToDetails()
         {
-            _navigationService.NavigateTo(AppPages.DetailsPage);
+            _navigationService.NavigateTo(AppPage.DetailsPage);
+        }
+
+        private void NavigateToGame()
+        {
+            _navigationService.NavigateTo(AppPage.GamePage);
         }
 
         private async void AddPlayer()
@@ -85,7 +101,8 @@ namespace Herpes.ViewModel
                     title: "Error");
                 return;
             }
-            var nextId = Players.Any() ? Players.Max(o => o.Id) + 1 : 1;  
+
+            var nextId = Players.Any() ? Players.Max(o => o.Id) + 1 : 1;
             Players.Add(new Player()
             {
                 Id = nextId,

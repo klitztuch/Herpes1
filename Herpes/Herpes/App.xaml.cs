@@ -1,8 +1,13 @@
-﻿using GalaSoft.MvvmLight.Ioc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using GalaSoft.MvvmLight.Ioc;
 using Herpes.Enum;
 using Herpes.Infrastructure.Service;
 using Herpes.Page;
+using Herpes.ViewModel;
 using Xamarin.Forms;
+
 // using Xamarin.Forms.Xaml;
 
 // [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
@@ -16,23 +21,20 @@ namespace Herpes
             InitializeComponent();
             XF.Material.Forms.Material.Init(this, "Material.Configuration");
 
-            // MainPage = new MainPage();
-            INavigationService navigationService;
-
-            if (!SimpleIoc.Default.IsRegistered<INavigationService>())
-            {
-                navigationService = new NavigationService();
-
-                navigationService.Configure(AppPages.MainPage, typeof(MainPage));
-                navigationService.Configure(AppPages.DetailsPage, typeof(DetailsPage));
-
-                SimpleIoc.Default.Register<INavigationService>(() => navigationService);
-            }
-
-            else
-            {
-                navigationService = SimpleIoc.Default.GetInstance<INavigationService>();
-            }
+            var navigationService = SimpleIoc.Default.GetInstance<INavigationService>();
+            // IEnumerable<(AppPage, Type)> allPages = new List<(AppPage, Type)>();
+            // var allPagesEnum = System.Enum.GetValues(typeof(AppPage)).Cast<AppPage>();
+            // foreach (var appPage in allPagesEnum)
+            // {
+            //     var type = Type.GetType($"Herpes.Page.{appPage}");
+            //     var toAdd = (appPage, type);
+            //     allPages.Append(toAdd);
+            // }
+            // navigationService.Configure(allPages);
+            
+            navigationService.Configure(AppPage.MainPage, typeof(MainPage));
+            navigationService.Configure(AppPage.DetailsPage, typeof(DetailsPage));
+            navigationService.Configure(AppPage.GamePage, typeof(GamePage));
 
             var firstPage = new NavigationPage(new MainPage());
             navigationService.Initialize(firstPage);
