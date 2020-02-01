@@ -2,12 +2,37 @@
 
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ui="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
+             xmlns:resx="clr-namespace:Herpes.Resx;assembly=Herpes"
              x:Class="Herpes.Page.GamePage"
              BindingContext="{Binding Source={StaticResource Locator}, Path=GameViewModel}">
+    <NavigationPage.TitleView>
+        <Label
+            FontFamily="{StaticResource MaterialFontFamily}"
+            Text="Test"></Label>
+    </NavigationPage.TitleView>
     <ContentPage.Content>
         <StackLayout>
-            <Image
-                Source="{Binding DiceImage}"></Image>
+            <!-- <Image -->
+            <!--     Source="{Binding DiceImage}"></Image> -->
+            <Label
+                Text="{Binding DiceOneValue, Mode=OneWay}"
+                HorizontalOptions="CenterAndExpand"
+                VerticalOptions="CenterAndExpand"
+                HeightRequest="150"
+                FontSize="60"
+                FontAttributes="Bold"/>
+            <Label
+                Text="{Binding DiceTwoValue, Mode=OneWay}"
+                IsVisible="{Binding IsHerpes, Mode=OneWay}"
+                HorizontalOptions="CenterAndExpand"
+                VerticalOptions="CenterAndExpand"
+                HeightRequest="150"
+                FontSize="60"
+                FontAttributes="Bold"/>
+            <ui:MaterialButton
+                Text="{x:Static resx:AppResources.RollDice}"
+                Command="{Binding RollDiceCommand}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

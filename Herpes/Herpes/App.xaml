@@ -8,7 +8,7 @@
              x:Class="Herpes.App">
     <Application.Resources>
         <viewModel:ViewModelLocator x:Key="Locator" />
-        
+
         <!-- <OnPlatform x:Key="FontFamily.RobotoRegular" -->
         <!--             x:TypeArguments="x:String" -->
         <!--             Android="Fonts/Roboto-Regular.ttf#Roboto-Regular" -->
@@ -34,21 +34,27 @@
         <!--                                     Subtitle2="{StaticResource FontFamily.RobotoMedium}" /> -->
 
         <resources:MaterialColorConfiguration x:Key="Material.Color"
-                                         Background="#EAEAEA"
-                                         Error="#B00020"
-                                         OnBackground="#000000"
-                                         OnError="#FFFFFF"
-                                         OnPrimary="#FFFFFF"
-                                         OnSecondary="#FFFFFF"
-                                         OnSurface="#000000"
-                                         Primary="#011A27"
-                                         PrimaryVariant="#000000"
-                                         Secondary="#063852"
-                                         SecondaryVariant="#001229"
-                                         Surface="#FFFFFF" />
+                                              Background="#EAEAEA"
+                                              Error="#B00020"
+                                              OnBackground="#000000"
+                                              OnError="#FFFFFF"
+                                              OnPrimary="#FFFFFF"
+                                              OnSecondary="#FFFFFF"
+                                              OnSurface="#000000"
+                                              Primary="#011A27"
+                                              PrimaryVariant="#000000"
+                                              Secondary="#063852"
+                                              SecondaryVariant="#001229"
+                                              Surface="#FFFFFF" />
 
         <resources:MaterialConfiguration x:Key="Material.Configuration"
-                                    ColorConfiguration="{StaticResource Material.Color}"/>
+                                         ColorConfiguration="{StaticResource Material.Color}" />
+
+        <OnPlatform x:Key="MaterialFontFamily" x:TypeArguments="x:String">
+            <On Platform="iOS" Value="Material Design Icons" />
+            <On Platform="Android" Value="materialdesignicons-webfont.ttf#Material Design Icons" />
+            <On Platform="UWP" Value="Assets/Fonts/materialdesignicons-webfont.ttf#Material Design Icons" />
+        </OnPlatform>
 
     </Application.Resources>
 </Application>

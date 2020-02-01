@@ -3,40 +3,42 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:ui="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
+             xmlns:resx="clr-namespace:Herpes.Resx;assembly=Herpes"
+             xmlns:styling="clr-namespace:Herpes.Helpers;assembly=Herpes"
              x:Class="Herpes.Page.MainPage"
-             ui:MaterialNavigationPage.AppBarColor="#2c3e50"
+             Title="Herpes"
+             ui:MaterialNavigationPage.AppBarTitleTextColor="{DynamicResource Material.Color.OnPrimary}"
+             ui:MaterialNavigationPage.AppBarColor="{DynamicResource Material.Color.Primary}"
              ui:MaterialNavigationPage.AppBarTitleTextFontFamily="Roboto"
              ui:MaterialNavigationPage.AppBarTitleTextFontSize="14"
-             ui:MaterialNavigationPage.StatusBarColor="#1B3147"
+             ui:MaterialNavigationPage.StatusBarColor="{DynamicResource Material.Color.Primary}"
              ui:MaterialNavigationPage.AppBarTitleTextAlignment="Start"
              BindingContext="{Binding Source={StaticResource Locator}, 
                                         Path=MainViewModel,
                                         Mode=OneWay}">
-    <NavigationPage.TitleView>
-        <Label Text="Herpes" />
-    </NavigationPage.TitleView>
+    <!-- <NavigationPage.TitleView> -->
+    <!--     <StackLayout -->
+    <!--         Orientation="Horizontal"> -->
+    <!--         <Label Text="Herpes"  -->
+    <!--                 TextColor="{DynamicResource Material.Color.OnPrimary}"/> -->
+    <!--     </StackLayout> -->
+    <!-- </NavigationPage.TitleView> -->
     <ContentPage.Content>
         <StackLayout>
-            <Label
-                Text="Hello, world!"
-                VerticalOptions="CenterAndExpand"
-                HorizontalOptions="CenterAndExpand" />
             <ListView
                 VerticalOptions="CenterAndExpand"
                 HorizontalOptions="CenterAndExpand"
                 Margin="5"
-                ItemsSource="{Binding Players}">
+                ItemsSource="{Binding UserSelectionViewModel.Players}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
                             <ui:MaterialCard
-                                Padding="2"
+                                Padding="10"
                                 CornerRadius="2"
                                 Elevation="1"
                                 HeightRequest="80"
-                                HorizontalOptions="FillAndExpand"
-                                BackgroundColor="DarkGray">
-                                
+                                HorizontalOptions="FillAndExpand">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
@@ -54,24 +56,27 @@
                                         Text="{Binding Name}"
                                         FontAttributes="None" />
                                 </Grid>
-                                
+
                             </ui:MaterialCard>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
             <Entry
-                Placeholder="Add a new Player"
+                Placeholder="{x:Static resx:AppResources.AddNewPlayerPlaceholder}"
                 Text="{Binding NewPlayerName, Mode=TwoWay}" />
-            <Button
-                Text="Add Player"
-                Command="{Binding AddPlayerCommand}" />
-            <Button
-                Text="To Details"
-                Command="{Binding NavigateToDetailsCommand}" />
             <ui:MaterialButton
-                Text="Start Game"
-                Command="{Binding NavigateToGameCommand}"/>
+                Text="{x:Static resx:AppResources.AddNewPlayerButton}"
+                Command="{Binding AddPlayerCommand}"
+                BackgroundColor="{DynamicResource Material.Color.Primary}" />
+            <ui:MaterialButton
+                Text="{x:Static resx:AppResources.ToDetails}"
+                Command="{Binding NavigateToDetailsCommand}"
+                BackgroundColor="{DynamicResource Material.Color.Primary}" />
+            <ui:MaterialButton
+                Text="{x:Static resx:AppResources.StartGame}"
+                Command="{Binding NavigateToGameCommand}"
+                BackgroundColor="{DynamicResource Material.Color.Primary}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

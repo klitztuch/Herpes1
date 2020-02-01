@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using GalaSoft.MvvmLight.Ioc;
+using GalaSoft.MvvmLight.Views;
 using Herpes.Enum;
 using Herpes.Infrastructure.Service;
 using Herpes.Page;
 using Herpes.ViewModel;
 using Xamarin.Forms;
+using XF.Material.Forms.UI;
 
 // using Xamarin.Forms.Xaml;
 
@@ -21,21 +23,14 @@ namespace Herpes
             InitializeComponent();
             XF.Material.Forms.Material.Init(this, "Material.Configuration");
 
-            var navigationService = SimpleIoc.Default.GetInstance<INavigationService>();
-            // IEnumerable<(AppPage, Type)> allPages = new List<(AppPage, Type)>();
-            // var allPagesEnum = System.Enum.GetValues(typeof(AppPage)).Cast<AppPage>();
-            // foreach (var appPage in allPagesEnum)
-            // {
-            //     var type = Type.GetType($"Herpes.Page.{appPage}");
-            //     var toAdd = (appPage, type);
-            //     allPages.Append(toAdd);
-            // }
-            // navigationService.Configure(allPages);
+            var navigationService = new NavigationService();
             
-            navigationService.Configure(AppPage.MainPage, typeof(MainPage));
-            navigationService.Configure(AppPage.DetailsPage, typeof(DetailsPage));
-            navigationService.Configure(AppPage.GamePage, typeof(GamePage));
-
+            navigationService.Configure(ViewModelLocator.MainPage, typeof(MainPage));
+            navigationService.Configure(ViewModelLocator.DetailsPage, typeof(DetailsPage));
+            navigationService.Configure(ViewModelLocator.GamePage, typeof(GamePage));
+            
+            SimpleIoc.Default.Register<INavigationService>(() => navigationService);
+            
             var firstPage = new NavigationPage(new MainPage());
             navigationService.Initialize(firstPage);
 

@@ -1,25 +1,28 @@
 ﻿using GalaSoft.MvvmLight.Ioc;
-using Herpes.Infrastructure.Service;
 
 namespace Herpes.ViewModel
 {
     public class ViewModelLocator
     {
+        #region Ctor
+
         public ViewModelLocator()
         {
             SimpleIoc.Default.Reset();
 
-            SimpleIoc.Default.Register<INavigationService, NavigationService>();
-
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<DetailsViewModel>();
             SimpleIoc.Default.Register<GameViewModel>();
+            SimpleIoc.Default.Register<UserSelectionViewModel>();
         }
 
-        public INavigationService NavigationService
-        {
-            get { return SimpleIoc.Default.GetInstance<INavigationService>(); }
-        }
+        #endregion
+
+        #region Properties
+
+        public const string MainPage = "MainPage";
+        public const string DetailsPage = "DetailsPage";
+        public const string GamePage = "GamePage";
 
         public MainViewModel MainViewModel
         {
@@ -35,5 +38,12 @@ namespace Herpes.ViewModel
         {
             get { return SimpleIoc.Default.GetInstance<GameViewModel>(); }
         }
+
+        public UserSelectionViewModel UserSelectionViewModel
+        {
+            get { return SimpleIoc.Default.GetInstance<UserSelectionViewModel>(); }
+        }
+
+        #endregion
     }
 }

@@ -4,9 +4,11 @@ using System.Linq;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Views;
 using Herpes.Enum;
 using Herpes.Infrastructure.Service;
 using Herpes.Model;
+using Herpes.Resx;
 using Xamarin.Forms;
 using XF.Material.Forms.UI.Dialogs;
 
@@ -14,8 +16,6 @@ namespace Herpes.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
-        private readonly INavigationService _navigationService;
-
         #region Commands
 
         private RelayCommand _navigateToDetailsCommand;
@@ -25,7 +25,10 @@ namespace Herpes.ViewModel
         /// </summary>
         public RelayCommand NavigateToDetailsCommand
         {
-            get { return _navigateToDetailsCommand ?? (_navigateToDetailsCommand = new RelayCommand(NavigateToDetails)); }
+            get
+            {
+                return _navigateToDetailsCommand ?? (_navigateToDetailsCommand = new RelayCommand(NavigateToDetails));
+            }
         }
 
         private RelayCommand _navigateToGameCommand;
@@ -46,17 +49,7 @@ namespace Herpes.ViewModel
 
         #region Properties
 
-        private ObservableCollection<Player> _players;
-
-        /// <summary>
-        ///     Sets the players or returns them.
-        /// </summary>
-        public ObservableCollection<Player> Players
-        {
-            get => _players;
-            set => Set(nameof(Players), ref _players, value);
-        }
-
+        private readonly INavigationService _navigationService;
         private string _newPlayerName;
 
         /// <summary>
@@ -68,47 +61,99 @@ namespace Herpes.ViewModel
             set => Set(nameof(NewPlayerName), ref _newPlayerName, value);
         }
 
+        private UserSelectionViewModel _userSelectionViewModel;
+
+        /// <summary>
+        ///     Gets the userselectionviewmodel or sets it.
+        /// </summary>
+        public UserSelectionViewModel UserSelectionViewModel
+        {
+            get => _userSelectionViewModel;
+            set => Set(nameof(UserSelectionViewModel), ref _userSelectionViewModel, value);
+        }
+
         #endregion
 
         #region Ctor
 
-        public MainViewModel(INavigationService navigationService)
+        /// <summary>
+        /// Creates an new instance of the <see cref="MainViewModel"/>
+        /// </summary>
+        /// <param name="navigationService"></param>
+        /// <param name="userSelectionViewModel"></param>
+        public MainViewModel(INavigationService navigationService, UserSelectionViewModel userSelectionViewModel)
         {
             _navigationService = navigationService ?? throw new ArgumentNullException(nameof(navigationService));
-            //TODO: change following to loaded event
-            Players = new ObservableCollection<Player>();
+            _userSelectionViewModel =
+                userSelectionViewModel ?? throw new ArgumentNullException(nameof(userSelectionViewModel));
         }
 
         #endregion
 
         #region Methods
 
+        /// <summary>
+        /// Navigate to the <see cref="DetailsViewModel"/>
+        /// </summary>
         private void NavigateToDetails()
         {
-            _navigationService.NavigateTo(AppPage.DetailsPage);
+            _navigationService.NavigateTo(ViewModelLocator.DetailsPage);
         }
 
-        private void NavigateToGame()
+        /// <summary>
+        /// Navigate to the <see cref="GameViewModel"/>
+        /// </summary>
+        private async void NavigateToGame()
         {
-            _navigationService.NavigateTo(AppPage.GamePage);
-        }
-
-        private async void AddPlayer()
-        {
-            if (string.IsNullOrEmpty(_newPlayerName))
+            if (UserSelectionViewModel.Players.Count == 0)
             {
-                await MaterialDialog.Instance.AlertAsync(message: "Player name not set.",
-                    title: "Error");
+                await MaterialDialog.Instance.SnackbarAsync(AppResources.NotEnoughPlayers,
+                    AppResources.Okay);
                 return;
             }
 
-            var nextId = Players.Any() ? Players.Max(o => o.Id) + 1 : 1;
-            Players.Add(new Player()
+            _navigationService.NavigateTo(ViewModelLocator.GamePage);
+        }
+
+        /// <summary>
+        ///     Adds a new <see cref="Player"/> to the active players
+        /// </summary>
+        private async void AddPlayer()
+        {
+            // Check if input is empty
+            if (string.IsNullOrEmpty(_newPlayerName))
+            {
+                await MaterialDialog.Instance.SnackbarAsync(AppResources.NameNotSet,
+                    AppResources.Okay);
+                return;
+            }
+
+            // Check if players already exists
+            if (_userSelectionViewModel.Players == null)
+            {
+                _userSelectionViewModel.Players = new ObservableCollection<Player>();
+            }
+
+            var nextId = _userSelectionViewModel.Players.Any() ? _userSelectionViewModel.Players.Max(o => o.Id) + 1 : 1;
+            _userSelectionViewModel.Players.Add(new Player()
             {
                 Id = nextId,
                 Name = NewPlayerName
             });
             NewPlayerName = string.Empty;
+        }
+
+        /// <summary>
+        /// Deletes <see cref="Player"/> from the active players
+        /// </summary>
+        /// <param name="id">id to delete</param>
+        private void DeletePlayer(int id)
+        {
+            var toDelete = _userSelectionViewModel.Players.Where(o => o.Id == id);
+            foreach (var player in toDelete)
+            {
+                _userSelectionViewModel.Players.Remove(player);
+            }
         }
 
         #endregion

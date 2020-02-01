@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Views;
 using Herpes.Infrastructure.Service;
 
 namespace Herpes.ViewModel
